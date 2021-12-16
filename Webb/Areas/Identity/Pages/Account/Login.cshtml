@@ -1,0 +1,142 @@
+﻿@page
+@model LoginModel
+@using Lap1.Models;
+@inject SignInManager<ApplicationUser> SignInManager
+@{ ViewData["Title"] = "Log in"; }
+
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="~/login/css/style.css">
+
+<body class="img js-fullheight background">
+    <section class="ftco-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-6 col-lg-4">
+                    <div class="login-wrap p-0">
+                        <h3 class="mb-4 text-center" style="font-weight:bold">Đăng nhập</h3>
+                        <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="signin-form">
+                            <div asp-validation-summary="All" class="text-danger" style="font-weight:bold"></div>
+                            <div class="form-group">
+                                @*<input type="text" class="form-control" placeholder="Username" required>*@
+                                <input style="width: 310px; background: transparent; border: none; height: 50px; color: white !important; border: 1px solid transparent; background: rgba(255, 255, 255, 0.2); border-radius: 40px; padding-left: 20px; padding-right: 20px; -webkit-transition: 0.3s; -o-transition: 0.3s; transition: 0.3s;" asp-for="Input.Email" value="" type="email" class="validate form-control" placeholder="Email">
+
+                            </div>
+                            <div class="form-group">
+                                @*<input id="password-field" type="password" class="form-control" placeholder="Password" required>
+                                    <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>*@
+                                <input value="P@ssw0rd" style="width:310px; background: transparent; border: none; height: 50px; color: white !important; border: 1px solid transparent; background: rgba(255, 255, 255, 0.2); border-radius: 40px; padding-left: 20px; padding-right: 20px; -webkit-transition: 0.3s; -o-transition: 0.3s; transition: 0.3s;" id="password-field" asp-for="Input.Password" type="password" class="validate form-control" placeholder="Mật khẩu">
+                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="form-control btn btn-primary submit px-3">Đăng nhập</button>
+                            </div>
+                            <div class="form-group d-md-flex">
+                                <div class="w-50">
+                                    @*<label class="checkbox-wrap checkbox-primary">
+                                            Remember Me
+                                            <input type="checkbox" checked>
+                                            <span class="checkmark"></span>
+                                        </label>*@
+                                    <label>
+                                        <input asp-for="Input.RememberMe" type="checkbox" class="filled-in" checked="checked" />
+                                        <span asp-for="Input.RememberMe" class="white-text">@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
+                                    </label>
+                                </div>
+                                <div class="w-50 text-md-right">
+                                    <a href="/Identity/Account/ForgotPassword" style="color: #fff">Quên mật khẩu</a>
+                                </div>
+                            </div>
+                        </form>
+                        <p class="w-100 text-center">&mdash; Hoặc đăng nhập với &mdash;</p>
+                        <div class="social d-flex text-center" style="display:flex;align-items:center;flex-direction:column">
+                            @*<a href="#" class="px-2 py-2 mr-md-1 rounded"><span class="ion-logo-facebook mr-2"></span> Facebook</a>
+                                <a href="#" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-twitter mr-2"></span> Twitter</a>*@
+                            @{ var loginProviders = await SignInManager.GetExternalAuthenticationSchemesAsync();
+                                if (loginProviders.Count() != 0)
+                                {
+                    <form asp-area="Identity" asp-page="/Account/ExternalLogin" asproute-returnurl="@ViewData["ReturnUrl"]" method="post" class="formhorizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in loginProviders)
+                                {
+                <button style="color:aliceblue" type="submit" class="btn btndefault rounded" name="provider" value="@provider.DisplayName" title="Log in using your Google account">
+                    @provider.DisplayName
+                </button>}
+                            </p>
+                        </div>
+                    </form> } }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+@*<h1>@ViewData["Title"]</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col s12 m5 offset-m2">
+                <form asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input asp-for="Input.Email" value="dinhhaiduongsaki@gmail.com" type="email" class="validate">
+                            <label asp-for="Input.Email" data-error="wrong" data-success="right">
+                                Email
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input asp-for="Input.Password" value="P@ssw0rd" type="password" class="validate">
+                            <label asp-for="Input.Password" data-error="wrong" data-success="right">
+                                Password
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row padding-left-10px">
+
+                        <label>
+                            <input asp-for="Input.RememberMe" type="checkbox" class="filled-in" checked="checked" />
+                            <span asp-for="Input.RememberMe">@Html.DisplayNameFor(m => m.Input.RememberMe)</span>
+                        </label>
+                    </div>
+                    <div class="row center">
+                        <button class="btn waves-effect waves-light" type="submit">
+                            Submit
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                    <div class="row center">
+                        <a href="/Identity/Account/ForgotPassword">Forgot your password?</a>
+                    </div>
+                </form>
+            </div>
+            <div class="col s12 m4 offset-m1">
+                <h5>Login using External Providers.</h5>
+                <div class="divider"></div>
+                @{ var loginProviders = await SignInManager.GetExternalAuthenticationSchemesAsync();
+                    if (loginProviders.Count() != 0)
+                    {
+        <form asp-area="Identity" asp-page="/Account/ExternalLogin" asproute-returnurl="@ViewData["ReturnUrl"]" method="post" class="formhorizontal">
+            <div>
+                <p>
+                    @foreach (var provider in loginProviders)
+                    {
+    <button type="submit" class="btn btndefault" name="provider" value="@provider.DisplayName" title="Log in using your@provider.DisplayName account">
+        @provider.DisplayName
+    </button>}
+                </p>
+            </div>
+        </form> } }
+            </div>
+        </div>
+    </div>*@
+<script src="~/login/js/jquery.min.js"></script>
+<script src="~/login/js/popper.js"></script>
+<script src="~/login/js/bootstrap.min.js"></script>
+<script src="~/login/js/main.js"></script>
+

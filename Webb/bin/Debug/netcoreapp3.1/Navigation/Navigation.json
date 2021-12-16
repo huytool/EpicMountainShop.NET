@@ -1,0 +1,98 @@
+﻿{
+  "MenuItems": [
+    {
+      "DisplayName": "Trang chủ",
+      "MaterialIcon": "dashboard",
+      "Link": "/ServiceRequests/Dashboard/Dashboard",
+      "IsNested": false,
+      "Sequence": 1,
+      "UserRoles": [ "User", "Engineer", "Admin" ],
+      "NestedItems": []
+    },
+    {
+      "DisplayName": "Tài khoản",
+      "MaterialIcon": "supervisor_account",
+      "Link": "",
+      "IsNested": true,
+      "Sequence": 2,
+      "UserRoles": [ "Admin" ],
+      "NestedItems": [
+        {
+          "DisplayName": "Khách hàng",
+          "MaterialIcon": "account_box",
+          "Link": "/Accounts/Account/Customers",
+          "IsNested": false,
+          "Sequence": 1,
+          "UserRoles": [ "Admin" ],
+          "NestedItems": []
+        },
+        {
+          "DisplayName": "Nhân viên",
+          "MaterialIcon": "person_add",
+          "Link": "/Accounts/Account/ServiceEngineers",
+          "IsNested": false,
+          "Sequence": 2,
+          "UserRoles": [ "Admin" ],
+          "NestedItems": []
+        }
+      ]
+    },
+    {
+      "DisplayName": "Đặt hàng",
+      "MaterialIcon": "local_laundry_service",
+      "Link": "/ServiceRequests/ServiceRequest/ServiceRequest",
+      "IsNested": false,
+      "Sequence": 3,
+      "UserRoles": [ "User", "Engineer", "Admin" ],
+      "NestedItems": []
+    },
+    {
+      "DisplayName": "Dữ liệu",
+      "MaterialIcon": "perm_data_setting",
+      "Link": "/Configuration/MasterData/MasterValues",
+      "IsNested": false,
+      "Sequence": 4,
+      "UserRoles": [ "Admin" ],
+      "NestedItems": []
+    },
+    {
+      "DisplayName": "Cài đặt",
+      "MaterialIcon": "settings",
+      "Link": "",
+      "IsNested": true,
+      "Sequence": 5,
+      "UserRoles": [ "User", "Engineer", "Admin" ],
+      "NestedItems": [
+        {
+          "DisplayName": "Thông tin cá nhân",
+          "MaterialIcon": "system_update_alt",
+          "Link": "/Accounts/Account/Profile",
+          "IsNested": false,
+          "Sequence": 1,
+          "UserRoles": [ "User", "Engineer", "Admin" ],
+          "NestedItems": []
+        },
+        {
+          "DisplayName": "Mật khẩu",
+          "MaterialIcon": "lock_outline",
+          "Link": "#!",
+          "IsNested": false,
+         
+          "Sequence": 2,
+          "UserRoles": [ "User", "Engineer", "Admin" ],
+          "NestedItems": []
+        }
+  ]
+},
+    {
+      "DisplayName": "Đăng xuất",
+      "MaterialIcon": "exit_to_app",
+      "Link": "/Identity/Account/Logout",
+      "IsNested": false,
+      "Sequence": 6,
+      "UserRoles": [ "User", "Engineer", "Admin" ],
+      "NestedItems": []
+    }
+    ]
+
+}

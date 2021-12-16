@@ -1,0 +1,30 @@
+﻿@using Microsoft.Extensions.Options;
+@using Lap1.Web.Configuration;
+@inject IOptions<ApplicationSettings> _configurationSettings
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="~/css/materialize.css" rel="stylesheet" />
+    <link href="~/css/materialize.min.css" rel="stylesheet" />
+    <link href="~/css/style.css" rel="stylesheet" />
+    <title>@_configurationSettings.Value.ApplicationTitle</title>
+</head>
+<body>
+
+    @Html.Partial("Header.cshtml");
+
+    <div>
+       
+        @RenderBody()
+    </div>
+    @Html.Partial("Footer.cshtml");
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/init.js"></script>
+    <script src="~/js/materialize.js"></script>
+    <script src="~/js/materialize.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

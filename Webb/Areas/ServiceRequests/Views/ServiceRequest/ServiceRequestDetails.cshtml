@@ -1,0 +1,279 @@
+﻿@model Webb.Areas.ServiceRequests.Models.ServiceRequestDetailViewModel
+@using Microsoft.AspNetCore.Http
+@using ASC.Models.BaseTypes
+@inject IHttpContextAccessor UserHttpContext
+@{
+    Layout = "_SecureLayout";
+}
+@{
+    // Compute Service Engineer and Status Disable logic
+    string serviceEngineerDisabled = null;
+    if (!UserHttpContext.HttpContext.User.IsInRole(Roles.Admin.ToString()))
+    {
+        serviceEngineerDisabled = "disabled";
+    }
+    string statusDisabled = null;
+    if (!UserHttpContext.HttpContext.User.IsInRole(Roles.Admin.ToString()) &&
+    !UserHttpContext.HttpContext.User.IsInRole(Roles.Engineer.ToString()))
+    {
+        statusDisabled = "disabled";
+    }
+    // Customer can update the status only if the original status is Customer pending approval.
+    if (UserHttpContext.HttpContext.User.IsInRole(Roles.User.ToString()) &&
+    Model.ServiceRequest.Status == Status.PendingCustomerApproval.ToString())
+    {
+        statusDisabled = null;
+        ViewBag.Status = new List<string> { "Completed", "RequestForInformation" };
+    }
+}
+
+<div class="row"></div>
+<div class="row padding-top-20px">
+    @* Details Section *@
+    <div class="row z-depth-3">
+        <div class="col s12 padding-0px">
+            <div class="section white-text padding-left-10px gradient-bg">
+                <h5>Chi tiết đơn hàng</h5>
+            </div>
+            <div class="divider"></div>
+            <form asp-controller="ServiceRequest" asp-action="UpdateServiceRequestDetails"
+                  method="post" class="col s12">
+                <input type="hidden" asp-for="ServiceRequest.RowKey" />
+                <input type="hidden" asp-for="ServiceRequest.PartitionKey" />
+                <input type="hidden" asp-for="ServiceRequest.RequestedDate" />
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select asp-for="ServiceRequest.VehicleName"
+                                asp-items="@(new SelectList(ViewBag.VehicleNames,"RowKey","Name"))" class="" required="required" disabled>
+                            <option value=" ">
+                                Please select one
+                            </option>
+                        </select>
+                        <label asp-for="ServiceRequest.VehicleName"></label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select asp-for="ServiceRequest.VehicleType" asp-items="@(new SelectList(ViewBag.VehicleTypes,"RowKey","Name"))"
+                                class="validate" required="required" disabled>
+                            <option value="">Please select one</option>
+                        </select>
+                        <label asp-for="ServiceRequest.VehicleType"></label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input asp-for="ServiceRequest.RequestedDate" type="text" disabled="disabled" class="datepicker" />
+                        <label asp-for="ServiceRequest.RequestedDate"></label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select asp-for="ServiceRequest.RequestedServices"
+                                asp-items="@(new SelectList(new List<SelectListItem>
+                                    {
+                                        new SelectListItem { Text = "Trực tiếp", Value = "Trực tiếp"},
+                                        new SelectListItem { Text = "Online", Value = "Online"}
+                                    },"Value","Text"))"
+                                class="validate" required="required">
+                            <option value="">--Chọn--</option>
+                        </select>
+                        <label asp-for="ServiceRequest.RequestedServices"></label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select asp-for="ServiceRequest.ServiceEngineer"
+                                asp-items="@(new SelectList(ViewBag.ServiceEngineers,"Email", "Email"))"
+                                class="" required="required" disabled=@serviceEngineerDisabled>
+                            <option value="">--Chọn--</option>
+                        </select>
+                        <label asp-for="ServiceRequest.ServiceEngineer"></label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select asp-for="ServiceRequest.Status"
+                                asp-items="@Html.GetEnumSelectList<Status>()"
+                                class="validate" required="required"
+                                disabled=@statusDisabled>
+                            <option value="">--Chọn--</option>
+                        </select>
+                        <label asp-for="ServiceRequest.Status"></label>
+                    </div>
+                    <div class="input-field col s12 right-align">
+                        <button class="btn waves-effect waves-light btnSubmit" type="submit"
+                                name="action">
+                            Update
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                    <div class="row col s12 right-align" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+        <div class="row"></div>
+    </div>
+    @await Html.PartialAsync("_ServiceRequestGrid", Model.ServiceRequestAudit, new ViewDataDictionary(ViewData)
+    {
+    { "SectionName", "Recent Updates" },
+    { "Id", "tblAuditServiceRequests" },
+    { "IsAudit", true }
+    })
+</div>
+@* Messages Section *@
+<input type="hidden" id="hdnCustomerEmail" value="@Model.ServiceRequest.PartitionKey" />
+<div class="row">
+    <div class="col s6">
+        <ul class="collection with-header">
+            <li class="collection-header gradient-bg"><h5>Tin nhắn</h5></li>
+            <li class="collection-item messages" style="overflow-y:scroll;height:300px">
+                <ul id="messagesList"></ul>
+                <div class="card-panel teal lighten-2 white-text noMessages hide">
+                    Không có.
+                </div>
+
+            </li>
+        </ul>
+        <div class="input-field col s12">
+            <input type="text" id="txtMessage" />
+            <label for="txtMessage">Nhập tin nhắn vào đây và nhấn enter để gửi.</label>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub", { }).configureLogging(signalR.LogLevel.Debug).build();
+        $(window).bind('beforeunload', function () {
+            connection.stop();
+        });
+        $(document).ready(function () {
+            connection.start().then(function () {
+                console.log('Connected!');
+            }).catch(function (err) {
+                return console.error(err.toString());
+            });
+            
+            // Initialize DataTable to show list of Service Requests
+            var table = $('.tblServiceRequests').DataTable({
+                'pageLength': 3,
+                // Number of records to be displayed per page
+                'lengthMenu': [[3, 5, 10, -1], [3, 5, 10, 'All']],
+                // Remove default Sorting
+                'sorting': [],
+                'columns': [{ "visible": false }, { "visible": false }, null,
+                { "width": "20%" }, null, null, null, { "visible": false }],
+                "language": {
+                    "search": "Tìm kiếm:",
+                    "zeroRecords": "Không tìm thấy mục nào",
+                    "lengthMenu": "Hiển thị _MENU_ mục",
+                    "info": "Hiển thị mục _START_ đến _END_ trong số _TOTAL_ mục",
+                    "infoEmpty": "Không tìm thấy mục nào",
+                    "infoFiltered": "(tìm kiếm trong tổng số _MAX_ mục)",
+                    "emptyTable": "Không tìm thấy dữ liệu.",
+                    "paginate": {
+                        "next": "Sau",
+                        "previous": "Trước"
+                    },
+                }
+            });
+            // Set Styles for DataTable and Number of Records to be displayed dropdown
+            $('.tblServiceRequests').css("width", "100%");
+            $('select[name$="ServiceRequests_length"]').formSelect();
+            // Initialize DatePicker
+            $('.datepicker').datepicker(
+                {
+                    format: "dd mmm, yyyy"
+                }
+            );
+            // initialize Material Select
+            $('select').formSelect();
+            $("select[required]").css({
+                display: "block", position: 'absolute',
+                visibility: 'hidden'
+            })
+
+
+            
+            @* Need to pass Verification Token to get Request Validated for Forgery *@
+            var token = $('input[type=hidden][name=__RequestVerificationToken]', document).val();
+            $.ajaxSetup({
+                // Disable caching of AJAX responses
+                cache: false,
+                headers: {
+                    'RequestVerificationToken': token, 'ServiceRequestId': $('#ServiceRequest_RowKey').val()
+                }
+
+            });
+            @* Get all previous messages for the service request *@
+            $.get('/ServiceRequests/ServiceRequest/ServiceRequestMessages?serviceRequestId=' + $('#ServiceRequest_RowKey').val(),
+                function (data, status) {
+                    addMessagesToList(data);
+                });
+            @* Function to scroll the messages panel to latest message *@
+            function scrollToLatestMessages() {
+                $('.messages').animate({ scrollTop: 10000 }, 'normal');
+            };
+            @* Function which is used to list of messages to UI *@
+            function addMessagesToList(messages) {
+                if (messages.length === 0) {
+                    $('.noMessages').removeClass('hide');
+                }
+                $.each(messages, function (index) {
+                    var message = messages[index];
+                    displayMessage(message);
+                });
+                scrollToLatestMessages();
+            };
+            @* Function which is invoked by SignalR Hub when a new message is broadcasted *@
+            function addMessage(message) {
+                if (message.PartitionKey !== $('#ServiceRequest_RowKey').val()) {
+                    return;
+                }
+                if (message !== null) {
+                    $('.noMessages').addClass('hide');
+                }
+                displayMessage(message);
+                scrollToLatestMessages();
+            };
+            @* Function used to display message on UI *@
+            function displayMessage(message) {
+                var isCustomer = $("#hdnCustomerEmail").val() === message.FromEmail ? 'blue lighten-1' : 'teal lighten-2';
+                $('#messagesList').append(
+                    '<li class="card-panel ' + isCustomer + ' white-text" style="padding-left:0;padding-right:0">' +
+                    '<div class="col s12 padding-0px">' +
+                    '<div class="col s8 padding-0px"><b>' + message.FromDisplayName + '</b></div> ' +
+
+                    '<div class="col s4 padding-0px font-size-12px right-align">' + (new
+
+                        Date(message.MessageDate)).toLocaleString() + '</div>' +
+
+                    '</div><br><span style="padding:22px">' + message.Message + '</span></li>'
+                );
+            };
+
+            
+            @* Get the proxy of SignalR Hub and associate client side function. *@
+            //$.connection.serviceMessagesHub.client.publishMessage = addMessage;
+            @* Function used to post message to server on keypress *@
+            $('#txtMessage').on('keyup', function (e) {
+                var key = e.which;
+                if (key == 13) {
+                    var message = new Object();
+                    message.Message = $('#txtMessage').val();
+                    message.PartitionKey = $('#ServiceRequest_RowKey').val();
+                    $.post('/ServiceRequests/ServiceRequest/CreateServiceRequestMessage',
+                        { message: message },
+                        function (data, status, xhr) {
+
+                            if (data) {
+                                $('.noMessages').addClass('hide');
+                                $('#txtMessage').val('');
+
+                            }
+                        });
+                    scrollToLatestMessages();
+                }
+            });
+            
+
+            connection.on("SendMessage", (message) => { addMessage(message); });
+
+        });
+        
+        
+    </script>
+}

@@ -1,0 +1,41 @@
+﻿@using Microsoft.Extensions.Options;
+@using Lap1.Web.Configuration;
+@inject IOptions<ApplicationSettings> _configurationSettings
+<nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+        <a id="logo-container" href="#" class="brand-logo">
+            <img src="~/icon/285807_auto_vehicle_car_automobile_convertible_icon.png" style="height:90px;width:100px;" />
+        </a>
+
+        <ul class="right hide-on-med-and-down">
+            <li>  <a href="~/Identity/Account/Login">Login</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="sidenav">
+            <li><a href="/Dashboard/Dashboard">Move To DashBoard</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+        <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+    </div>
+</nav>
+
+<div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+        <div class="container">
+            <br><br>
+            <h1 class="header center teal-text text-lighten-2">@_configurationSettings.Value.ApplicationTitle</h1>
+            <div class="row center">
+                <h5 class="header col s12 light">Where Quality Meets Safety</h5>
+            </div>
+            <div class="row center">
+                <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">Get Started</a>
+            </div>
+            <br><br>
+
+        </div>
+    </div>
+    <div class="parallax">  <img src="~/image/pexels-photo-919073.jpeg" /></div>
+
+
+</div>

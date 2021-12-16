@@ -1,0 +1,46 @@
+﻿@page
+@model Webb.Areas.Identity.Pages.Account.ExternalLoginConfirmationModel
+@{ ViewData["Title"] = "Register"; }
+<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="~/login/css/style.css">
+<body class="img js-fullheight background">
+    <section class="ftco-section">
+        <div class="container" >
+                <div class="row justify-content-center" style="flex-direction:column;align-items:center">
+                    <p class="text-accent-1">
+                        Bạn đã đăng nhập thành công với 
+                        @*<strong>@ViewData["LoginProvider"]</strong>*@
+                        <strong> Google</strong>
+                        . Hãy nhập vào đây 1 email để hoàn thành việc đăng ký tài khoản.
+                    </p>
+                    <div class="col-md-6 col-lg-4">
+                        <form asp-route-returnurl="@ViewData[" ReturnUrl"]" method="post" class="form-horizontal">
+                            <div asp-validation-summary="All" class="text-danger" style="font-weight:bold"></div>
+
+                            <div class="row form-group">
+                                <div class="input-field col s12">
+                                    <input style="width: 310px; background: transparent; border: none; height: 50px; color: white !important; border: 1px solid transparent; background: rgba(255, 255, 255, 0.2); border-radius: 40px; padding-left: 20px; padding-right: 20px; -webkit-transition: 0.3s; -o-transition: 0.3s; transition: 0.3s;" asp-for="Input.Email" type="email" class="validate form-control" placeholder="Email">
+                                </div>
+                            </div>
+                            @*<div class="form-group">
+                                <button type="submit" class="form-control btn btn-primary submit px-3">Sign In</button>
+                            </div>*@
+                        <div class="row center" style="display:flex;align-items:center;flex-direction:column">
+                            <button type="submit" class="form-control btn btn-primary submit px-3" style="width: 350px">
+                                Đăng ký
+                                <i class="material-icons right">send</i>
+                            </button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+        </div>
+    </section>
+</body>
+<script src="~/login/js/jquery.min.js"></script>
+<script src="~/login/js/popper.js"></script>
+<script src="~/login/js/bootstrap.min.js"></script>
+<script src="~/login/js/main.js"></script>

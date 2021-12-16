@@ -1,0 +1,101 @@
+﻿@using Microsoft.AspNetCore.Http
+@using ASC.Utilities
+@using Webb.Data
+@inject IHttpContextAccessor UserHttpContext
+@inject INavigationCacheOperations navigationCache
+@{ Layout = "_MasterLayout";
+    var currentUser = UserHttpContext.HttpContext.User.GetCurrentUserDetails(); }
+<header class="secureLayout">
+    <nav class="top-nav gradient-bg">
+        <div class="nav-wrapper row valign-wrapper">
+            <div class="col s12 valign-wrapper">
+                <a href="#" data-target="nav-mobile" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <h5><a class="page-title">Epic Mountain Shop</a></h5>
+            </div>
+        </div>
+    </nav>
+    <!-- Side NavBar -->
+    <ul id="nav-mobile" class="sidenav sidenav-fixed">
+        <li class="background-image">
+            <div class="user-view" style="text-align: center; display: flex; flex-direction: column; align-items: center">
+                @*<div class="background color"> &nbsp;</div>*@
+                <a href="#!user"><img class="circle" src="~/image/male.png"></a>
+                <a href="#!name"><span class="white-text name">@currentUser.Name</span></a>
+                <a href="#!email"><span class="white-text email">@currentUser.Email</span></a>
+            </div>
+        </li>
+
+        @await Component.InvokeAsync("ASC.Utilities.Navigation.LeftNavigation", await navigationCache.GetNavigationCacheAsync())
+    </ul>
+</header>
+<!-- Render Body -->
+<main class="secureLayout">
+    <div class="row margin-bottom-0px">
+        <div class="col s12">
+            @RenderBody()
+        </div>
+    </div>
+</main>
+<!-- Footer -->
+<footer class="page-footer gradient-bg secureLayout">
+    <div class="row">
+        <div class="col l6 s12">
+            <h5 class="white-text">Về chúng tôi</h5>
+            <p class="grey-text text-lighten-4" style="text-align:justify">
+                Epic Mountain là một cửa hàng chuyên bán các sản phẩm giày thể thao với chất lượng cao và giá thành phải chăng, phù hợp với mọi lứa tuổi, chúng tôi luôn mong muốn đưa đến khách hàng một cảm giác tuyệt vời khi mua hàng tại Epic Mountain và có các chính sách bảo đảm quyền lợi của khách hàng, các sản phẩm giày của chúng tôi đều được nhập khẩu từ các brand nổi tiếng để đảm bảo chất lượng của sản phẩm
+            </p>
+        </div>
+        <div class="col l3 s12">
+            <h5 class="white-text">Địa chỉ</h5>
+            <ul>
+                <li><a class="white-text" href="#!">Đường Yersin, Phường Phú Lợi, TP.TDM</a></li>
+                <li><a class="white-text" href="#!">SĐT: 0123456789</a></li>
+
+            </ul>
+        </div>
+        <div class="col l3 s12">
+            <h5 class="white-text">Liên hệ</h5>
+            <ul>
+                <li><a class="white-text" href="#!"><i class="fab fa-facebook-square"></i>&nbsp; Facebook</a></li>
+                <li><a class="white-text" href="#!"><i class="fab fa-youtube"></i>&nbsp; Youtube</a></li>
+                <li><a class="white-text" href="#!"><i class="fab fa-twitter"></i>&nbsp; Twitter</a></li>
+                <li><a class="white-text" href="#!"><i class="fab fa-linkedin-in"></i>&nbsp; LinkedIn</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-copyright row" style="margin-bottom:-5px">
+        <div class="col s12">
+            Powered by <a class="brown-text text-lighten-3" href="http://materializecss.com">
+                Materialize
+            </a>
+        </div>
+    </div>
+</footer>
+<form class="hide" method="post" id="logout_form" asp-area="Identity" asp-page="/Account/Logout">
+    <input type="submit" value="Logout" />
+</form>
+<form class="hide" method="post" id="resetPassword_form" asp-area="Identity" asp-page="/Account/InitiateResetPassword">
+</form>
+
+@section Scripts{
+    @RenderSection("Scripts", required: false)
+  
+    <script type="text/javascript">
+        $(function () {
+            $('#ancrLogout').click(function () {
+                $('#logout_form').submit();
+            });
+            $('#ancrResetPassword').click(function () {
+                $('#resetPassword_form').submit();
+            });
+
+        });
+
+        const clickk = document.querySelector(".option_admin");
+        $(document).ready(function () {
+            $('.collapsible').collapsible();
+            //$.connection.hub.start();
+        });
+
+    </script>
+}

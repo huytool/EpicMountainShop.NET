@@ -1,0 +1,12 @@
+D:\Web\Lap1\ASC.Models\bin\Debug\net5.0\ASC.Models.deps.json
+D:\Web\Lap1\ASC.Models\bin\Debug\net5.0\ASC.Models.dll
+D:\Web\Lap1\ASC.Models\bin\Debug\net5.0\ref\ASC.Models.dll
+D:\Web\Lap1\ASC.Models\bin\Debug\net5.0\ASC.Models.pdb
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ASC.Models.csprojAssemblyReference.cache
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ASC.Models.GeneratedMSBuildEditorConfig.editorconfig
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ASC.Models.AssemblyInfoInputs.cache
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ASC.Models.AssemblyInfo.cs
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ASC.Models.csproj.CoreCompileInputs.cache
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ASC.Models.dll
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ref\ASC.Models.dll
+D:\Web\Lap1\ASC.Models\obj\Debug\net5.0\ASC.Models.pdb

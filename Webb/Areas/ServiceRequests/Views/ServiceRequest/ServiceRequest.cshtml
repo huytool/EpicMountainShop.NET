@@ -1,0 +1,79 @@
+﻿@model Webb.Areas.ServiceRequests.Models.NewServiceRequestViewModel
+@using System.Globalization;
+@{
+    ViewData["Title"] = "ServiceRequest";
+    Layout = "~/Views/Shared/_SecureLayout.cshtml";
+}
+<div class="row"></div>
+<div class="new_col">
+    @* Details Section *@
+    <div class="row z-depth-3">
+        <div class="col s12 padding-0px">
+            <div class="section white-text padding-left-10px gradient-bg">
+                <h5>Đơn đặt hàng</h5>
+            </div>
+            <div class="divider"></div>
+            <form asp-controller="ServiceRequest" asp-action="ServiceRequest" method="post"
+                  class="col s12">
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select asp-for="VehicleName" asp-items="@(new SelectList(ViewBag.VehicleNames,"RowKey","Name"))" class="validate" required="required">
+                             <option value="">--Chọn--</option>
+                        </select>
+                        <label asp-for="VehicleName"></label>
+                    </div>
+                    <div class="input-field col s4">
+                        <select asp-for="VehicleType" asp-items="@(new SelectList(ViewBag.VehicleTypes,"RowKey","Name"))" class="validate" required="required">
+                            <option value="">--Chọn--</option>
+                        </select>
+                        <label asp-for="VehicleType"></label>
+                    </div>
+                    <div class="input-field col s4">
+                        <input asp-for="RequestedDate" type="text" class="datepicker" value="@DateTime.Now" disabled="disabled"/>
+                        <label asp-for="RequestedDate"></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s4">
+                        <select asp-for="RequestedServices"
+                                asp-items="@(new SelectList(new List<SelectListItem>
+                                    {
+                                        new SelectListItem { Text = "Trực tiếp", Value = "Trực tiếp"},
+                                        new SelectListItem { Text = "Online", Value = "Online"}
+                                    },"Value","Text"))"
+                                class="validate" required="required">
+                            <option value="">--Chọn--</option>
+                        </select>
+                        <label asp-for="RequestedServices"></label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12 right-align">
+                        <button class="btn waves-effect waves-light btnSubmit" type="submit"
+                                name="action">
+                            Đặt hàng
+                            <i class="material-icons right">send</i>
+                        </button>
+                    </div>
+                    <div class="row col s12 right-align" asp-validation-summary="All"></div>
+                </div>
+            </form>
+        </div>
+        <div class="row"></div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+         $(document).ready(function () {
+             $('.datepicker').datepicker(
+                 {
+                     format: "dd mmm, yyyy"
+                 }
+           );
+         $('select').formSelect();
+         $("select[required]").css({ display: "block", position: 'absolute', visibility: 'hidden' });
+         });
+    </script>
+}
+
+
