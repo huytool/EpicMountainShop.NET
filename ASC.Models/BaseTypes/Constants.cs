@@ -24,7 +24,7 @@ namespace ASC.Models.BaseTypes
     }
     public enum Status
     {
-        [Display(Name="Mới")] New,
+        [Display(Name = "Mới")] New,
         [Display(Name = "Hủy")] Denied,
         [Display(Name = "Chưa giải quyết")] Pending,
         [Display(Name = "Bắt đầu")] Initiated,

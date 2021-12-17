@@ -50,9 +50,12 @@ namespace Webb.Areas.ServiceRequests.Controllers
                 auditServiceRequests = await _serviceRequestOperations.GetServiceRequestsFormAudit();
                 var serviceEngineerServiceRequests = await _serviceRequestOperations.GetActiveServiceRequests(new List<string>
                      {
-                     Status.InProgress.ToString(),
-                     Status.Initiated.ToString(),
-                     });
+                   
+                     //Status.InProgress.ToString(),
+                      4.ToString(),
+                     //Status.Initiated.ToString(),
+                     3.ToString(),
+                     });;
                 if (serviceEngineerServiceRequests.Any())
                 {
                     activeServiceRequests = serviceEngineerServiceRequests
